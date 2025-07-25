@@ -4,6 +4,13 @@ metadata:
   name: {{ include "ranger.fullname" . }}
   labels:
     {{- include "ranger.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- toYaml .Values.commonLabels | nindent 4 }}
+    {{- end}}
+  {{- if .Values.podAnnotations }}
+  annotations:
+    {{- toYaml .Values.podAnnotations | nindent 4 }}
+  {{- end}}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -16,8 +23,14 @@ spec:
       annotations:
         checksum/config-map: {{ include (print .Template.BasePath "/configmap.yaml") . | sha256sum }}
         checksum/secret: {{ include (print .Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- if .Values.podAnnotations }}
+        {{- toYaml .Values.podAnnotations | nindent 8 }}
+        {{- end}}
       labels:
         {{- include "ranger.selectorLabels" . | nindent 8 }}
+        {{- if .Values.commonLabels }}
+        {{- toYaml .Values.commonLabels | nindent 8 }}
+        {{- end}}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -51,7 +64,7 @@ spec:
             {{- end }}
           volumeMounts:
             - name: config-volume
-              mountPath: /opt/ranger-admin/install.properties
+              mountPath: {{ .Values.configMountPath }}
               subPath: install_properties
               readOnly: false
           resources:

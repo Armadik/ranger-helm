@@ -4,6 +4,9 @@ metadata:
   name: {{ include "ranger.fullname" . }}
   labels:
     {{- include "ranger.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- toYaml .Values.commonLabels | nindent 4 }}
+    {{- end}}
 spec:
   type: {{ .Values.service.type }}
   ports:

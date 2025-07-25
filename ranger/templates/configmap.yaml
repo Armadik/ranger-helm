@@ -6,11 +6,14 @@ metadata:
     app.kubernetes.io/name: {{ include "ranger.name" . }}
     helm.sh/chart: {{ include "ranger.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- if .Values.commonLabels }}
+    {{- toYaml .Values.commonLabels | nindent 4 }}
+    {{- end}}
 data:
     install_properties: |
       PYTHON_COMMAND_INVOKER={{ .Values.conf.PYTHON_COMMAND_INVOKER }}
       DB_FLAVOR={{ .Values.conf.DB_FLAVOR }}
-      SQL_CONNECTOR_JAR=/usr/share/java/postgresql-connector-java.jar
+      SQL_CONNECTOR_JAR={{ .Values.conf.SQL_CONNECTOR_JAR }}
       db_root_user={{ .Values.conf.db_user }}
       db_root_password={{ .Values.conf.db_password }}
       db_host={{ .Values.conf.db_host }}
@@ -81,14 +84,14 @@ data:
       xa_ldap_groupRoleAttribute={{ .Values.conf.xa_ldap_groupRoleAttribute }}
       xa_ldap_base_dn={{ .Values.conf.xa_ldap_base_dn }}
       xa_ldap_bind_dn={{ .Values.conf.xa_ldap_bind_dn }}
-      xa_ldap_bind_password=LDAP_TUZ_PASSWORD
+      xa_ldap_bind_password={{ .Values.conf.xa_ldap_bind_password }}
       xa_ldap_referral={{ .Values.conf.xa_ldap_referral }}
       xa_ldap_userSearchFilter={{ .Values.conf.xa_ldap_userSearchFilter }}
       xa_ldap_ad_domain={{ .Values.conf.xa_ldap_ad_domain }}
       xa_ldap_ad_url={{ .Values.conf.xa_ldap_ad_url }}
       xa_ldap_ad_base_dn={{ .Values.conf.xa_ldap_ad_base_dn }}
       xa_ldap_ad_bind_dn={{ .Values.conf.xa_ldap_ad_bind_dn }}
-      xa_ldap_ad_bind_password=LDAP_TUZ_PASSWORD
+      xa_ldap_ad_bind_password={{ .Values.conf.xa_ldap_ad_bind_password }}
       xa_ldap_ad_referral={{ .Values.conf.xa_ldap_ad_referral }}
       xa_ldap_ad_userSearchFilter={{ .Values.conf.xa_ldap_ad_userSearchFilter }}
       spnego_principal={{ .Values.conf.spnego_principal }}
@@ -129,4 +132,4 @@ data:
       sqlserver_audit_file=db/sqlserver/xa_audit_db_sqlserver.sql
       sqlanywhere_core_file=db/sqlanywhere/optimized/current/ranger_core_db_sqlanywhere.sql
       sqlanywhere_audit_file=db/sqlanywhere/xa_audit_db_sqlanywhere.sql
-      cred_keystore_filename=/opt/ranger-admin/ews/webapp/WEB-INF/classes/conf/.jceks/rangeradmin.jceks
+      cred_keystore_filename={{ .Values.conf.cred_keystore_filename }}

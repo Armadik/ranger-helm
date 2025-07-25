@@ -3,6 +3,11 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ include "ranger.fullname" . }}-usersync
+  labels:
+    {{- include "ranger.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- toYaml .Values.commonLabels | nindent 4 }}
+    {{- end}}
 spec:
   concurrencyPolicy: Forbid
   schedule: "0 * * * *"

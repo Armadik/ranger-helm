@@ -7,6 +7,9 @@ metadata:
     app.kubernetes.io/name: {{ include "ranger.name" . }}
     helm.sh/chart: {{ include "ranger.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- if .Values.commonLabels }}
+    {{- toYaml .Values.commonLabels | nindent 4 }}
+    {{- end}}
 data:
   install_properties: |
     ranger_base_dir={{ .Values.ranger_usersync.conf.ranger_base_dir }}

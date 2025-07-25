@@ -13,6 +13,8 @@ serviceAccount:
   annotations: {}
   name: ""
 
+commonLabels: {}
+
 podAnnotations: {}
 
 podSecurityContext: {}
@@ -42,6 +44,8 @@ ingress:
     #    - ranger-admin.local.com
     #  paths:
     #    - /
+
+configMountPath: /opt/ranger-admin/install.properties
 
 conf:
   PYTHON_COMMAND_INVOKER: python3
@@ -176,7 +180,7 @@ ranger_usersync:
     usersync_principal:
     usersync_keytab:
     hadoop_conf: /etc/hadoop-default
-    CRED_KEYSTORE_FILENAME: /etc/ranger/usersync/conf/rangerusersync.jceks
+    cred_keystore_filename: /etc/ranger/usersync/conf/rangerusersync.jceks
     AUTH_SSL_ENABLED: false
     AUTH_SSL_KEYSTORE_FILE: /etc/ranger/usersync/conf/cert/unixauthservice.jks
     AUTH_SSL_KEYSTORE_PASSWORD: 12345
@@ -240,7 +244,7 @@ servicemonitor:
   create: true
 
 postgresql:
-  enabled: true
+  enabled: false
   postgresqlDatabase: ranger
   postgresqlUsername: ranger
   postgresqlPassword: ranger
